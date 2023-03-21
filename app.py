@@ -5,7 +5,7 @@ import xlsxwriter
 import calendar
 from datetime import datetime
 import io, os, sys
-hello
+
 if getattr(sys, 'frozen', False):
     template_folder = os.path.join(sys._MEIPASS, 'templates')
     app = Flask(__name__, template_folder=template_folder)
