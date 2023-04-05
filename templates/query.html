@@ -2,19 +2,80 @@
 <html>
   <head>
     <title>Winery Bottling Data</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="text"] {
+        padding: 5px;
+        font-size: 14px;
+        width: 200px;
+      }
+
+      input[type="checkbox"] {
+        margin-right: 5px;
+      }
+
+      input[type="submit"] {
+        padding: 5px 10px;
+        font-size: 14px;
+        background-color: #008CBA;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #006C9A;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #f2f2f2;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <h1>Winery Bottling Data</h1>
     <form method="POST" action="/query1">
         <label for="winery_name">Winery Name:</label>
-        <select name="winery_name" id="winery_name">
-            {% for winery in wineries %}
-                <option value="{{ winery }}">{{ winery }}</option>
-            {% endfor %}
-        </select><br>
-        <input type="checkbox" name="columns" value="winery_name">Winery Name<br>
-        <input type="checkbox" name="columns" value="bottling_date">bottling_date<br>
-        <input type="checkbox" name="columns" value="wine_type">wine_type<br>
+        <input type="text" name="winery_name" id="winery_name"><br>
+        <input type="checkbox" name="columns" value="winery_name">יקב<br>
+        <input type="checkbox" name="columns" value="year">תאריך<br>
+        <input type="checkbox" name="columns" value="price">מחיר<br>
+        <input type="checkbox" name="columns" value="total_bottles">מס' בקבוקים<br>
+        <input type="checkbox" name="columns" value="bottles">סוגי יין<br>
+        <input type="checkbox" name="columns" value="karton">אריזה<br>
+
         <br>
         <input type="submit" value="Query">
     </form>
@@ -23,9 +84,12 @@
     <table>
       <thead>
         <tr>
-          <th>Winery Name</th>
-          <th>Year</th>
-          <th>Bottles Produced</th>
+          <th>יקב</th>
+          <th>תאריך</th>
+          <th>מחיר</th>
+          <th>מס' בקבוקים</th>
+          <th>סוגי יין</th>
+          <th>אריזה</th>
         </tr>
       </thead>
       <tbody>
@@ -34,6 +98,9 @@
           <td>{{ row[0] }}</td>
           <td>{{ row[1] }}</td>
           <td>{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+          <td>{{ row[4] }}</td>
+          <td>{{ row[5] }}</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -420,26 +420,30 @@ def result():
     return send_file(output)
 
 
+
 @app.route('/query1', methods=['POST'])
 def query():
 
     # Get the winery name from the form
     winery_name = request.form['winery_name']
 
-    # Query the database for bottling data for the specified winery
-    cursor = db.cursor()
+    # Read the data from the excel file
+    data = pd.read_excel('wineries_data.xlsx')
+
+    # Filter the data based on the specified winery name
+    data = data[data['winery_name'] == winery_name]
 
     # Get list of all wineries for the dropdown menu
-    cursor.execute('SELECT winery_name FROM bottling')
-    wineries = cursor.fetchall()
+    wineries = data['winery_name'].unique().tolist()
 
-    # Query the database for bottling data for the specified winery
+    # Get the columns selected by the user
     cols = request.form.getlist('columns')
 
-    # Build the SQL query based on the user's selected columns
-    query = 'SELECT ' + ', '.join(cols) + ' FROM bottling WHERE winery_name = %s'
-    cursor.execute(query, (winery_name,))
-    data = cursor.fetchall()
+    # Filter the data based on the selected columns
+    data = data[cols]
+
+    # Convert the data to a list of lists for rendering in the template
+    data = data.values.tolist()
 
     # Pass the data and winery list to the template and render it
     return render_template('query.html', data=data, wineries=wineries)
