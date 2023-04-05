@@ -428,7 +428,7 @@ def query():
     winery_name = request.form['winery_name']
 
     # Read the data from the excel file
-    data = pd.read_excel('wineries_data.xlsx')
+    data = pd.read_excel('2019.xlsx')
 
     # Filter the data based on the specified winery name
     data = data[data['winery_name'] == winery_name]
