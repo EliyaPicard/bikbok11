@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Winery Bottling Data</title>
+  </head>
+  <body>
+    <h1>Winery Bottling Data</h1>
+    <form method="POST" action="/query1">
+        <label for="winery_name">Winery Name:</label>
+        <select name="winery_name" id="winery_name">
+            {% for winery in wineries %}
+                <option value="{{ winery }}">{{ winery }}</option>
+            {% endfor %}
+        </select><br>
+        <input type="checkbox" name="columns" value="winery_name">Winery Name<br>
+        <input type="checkbox" name="columns" value="bottling_date">bottling_date<br>
+        <input type="checkbox" name="columns" value="wine_type">wine_type<br>
+        <br>
+        <input type="submit" value="Query">
+    </form>
+
+    {% if data %}
+    <table>
+      <thead>
+        <tr>
+          <th>Winery Name</th>
+          <th>Year</th>
+          <th>Bottles Produced</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </body>
+</html>

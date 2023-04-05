@@ -5,12 +5,23 @@ import xlsxwriter
 import calendar
 from datetime import datetime
 import io, os, sys
+import mysql.connector
 
 if getattr(sys, 'frozen', False):
     template_folder = os.path.join(sys._MEIPASS, 'templates')
     app = Flask(__name__, template_folder=template_folder)
 else:
     app = Flask(__name__)
+
+
+
+db = mysql.connector.connect(
+    host="sql12.freemysqlhosting.net",
+    user="sql12610795",
+    password="4MUnsXxUHz",
+    database="sql12610795"
+)
+
 
 
 @app.route('/')
@@ -24,6 +35,10 @@ def home():
 @app.route('/hours')
 def hours():
     return render_template('hours.html')
+
+@app.route('/query')
+def home2():
+    return render_template("query.html")
 
 @app.route('/calculator', methods=['POST'])
 def calc():
@@ -115,7 +130,7 @@ def calc():
             merged_df['גילום ארוחות'] = merged_df['שינה בבית'].apply(
                 lambda x: 100 if x == "לא" else 40 if x == "כן" else 0)
 
-            cols = ['ש"ע 100%', 'ש"ע 125%', 'ש"ע 150%', 'סך שעות', 'ארוחות']
+            cols = ['ש"ע 100%', 'ש"ע 125%', 'ש"ע 150%', 'סך שעות', 'החזר נסיעות','ארוחות']
 
             # Calculate the sum of each column
             sums = merged_df[cols].sum(axis=0)
@@ -130,7 +145,9 @@ def calc():
                 'ש"ע 125%': merged_df.iloc[:-1]['ש"ע 125%'].sum() * price_per_hour(i) * 1.25,
                 'ש"ע 100%': merged_df.iloc[:-1]['ש"ע 100%'].sum() * price_per_hour(i),
                 'גילום ארוחות': merged_df['גילום ארוחות'].sum(),
-                'ארוחות': merged_df.iloc[:-1]['ארוחות'].sum()
+                'ארוחות': merged_df.iloc[:-1]['ארוחות'].sum(),
+                'החזר נסיעות': merged_df.iloc[:-1]['החזר נסיעות'].sum()*price_per_mile,
+
             }
             merged_df.loc[len(merged_df)] = total
 
@@ -152,7 +169,7 @@ def calc():
                 merged_df.loc[len(merged_df)] = new_row2
 
             else:
-                cell = merged_df.iloc[-4, 8] + merged_df.iloc[-4, 9] + merged_df.iloc[-4, 10]
+                cell = merged_df.iloc[-4, 8] + merged_df.iloc[-4, 9] + merged_df.iloc[-4, 10]+merged_df.iloc[-4, 12]
                 cell2 = cell
                 new_row2 = {'ש"ע 100%': cell2}
                 merged_df.loc[len(merged_df)] = new_row2
@@ -401,6 +418,34 @@ def result():
 
     output = recipt(filename, price, magnom, mishtachim, Yekev_name, karton, maarach, month)  # modify this line
     return send_file(output)
+
+
+@app.route('/query1', methods=['POST'])
+def query():
+
+    # Get the winery name from the form
+    winery_name = request.form['winery_name']
+
+    # Query the database for bottling data for the specified winery
+    cursor = db.cursor()
+
+    # Get list of all wineries for the dropdown menu
+    cursor.execute('SELECT winery_name FROM bottling')
+    wineries = cursor.fetchall()
+
+    # Query the database for bottling data for the specified winery
+    cols = request.form.getlist('columns')
+
+    # Build the SQL query based on the user's selected columns
+    query = 'SELECT ' + ', '.join(cols) + ' FROM bottling WHERE winery_name = %s'
+    cursor.execute(query, (winery_name,))
+    data = cursor.fetchall()
+
+    # Pass the data and winery list to the template and render it
+    return render_template('query.html', data=data, wineries=wineries)
+
+
+
 
 
 if __name__ == '__main__':
