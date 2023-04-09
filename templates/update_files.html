@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>הדאטה של יואל</title>
+    <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='style1.css')}}">
+    <img id="logo" src="{{ url_for('static', filename='logo.jpeg') }}">
+  </head>
+<body>
+  <h1>Update Files</h1>
+  <button class='special-button' onclick="window.location.href='/';">חזרה לתפריט הראשי</button>
+  <form method="POST" action="/process_files">
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch('/process_files', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      alert(data.message);
+      const backButton = document.querySelector('#back-button');
+      backButton.textContent = data.button_text;
+      backButton.href = data.button_url;
+      backButton.style.display = 'inline-block';
+    });
+  </script>
+</body>

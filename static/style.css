@@ -120,6 +120,13 @@ input[type="submit"]:hover {
   height: 100px;
 }
 
+.submit-button {
+  background-color: blue;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+}
 
 /* Style the paragraph */
 p {
