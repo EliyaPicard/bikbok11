@@ -2,75 +2,8 @@
 <html>
   <head>
     <title>הדאטה של יואל</title>
-    <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='style.css')}}">
+    <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='style1.css')}}">
     <img id="logo" src="{{ url_for('static', filename='logo.jpeg') }}">
-
-
-    <style>
-      .show-more {
-        color: blue;
-        cursor: pointer;
-        margin-left: 5px;
-      }
-
-      .hidden {
-        display: none;
-      }
-      body {
-        font-family: David, sans-serif;
-        font-size: 14px;
-        line-height: 1.5;
-      }
-
-      form {
-        margin-bottom: 20px;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 10px;
-      }
-
-      input[type="text"] {
-        padding: 5px;
-        font-size: 14px;
-        width: 200px;
-      }
-
-      input[type="checkbox"] {
-        margin-right: 5px;
-      }
-
-      input[type="submit"] {
-        padding: 5px 10px;
-        font-size: 14px;
-        background-color: #008CBA;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #006C9A;
-      }
-
-      table {
-        border-collapse: collapse;
-        width: 100%;
-      }
-
-      th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-
-      th {
-        background-color: #f2f2f2;
-        font-size: 16px;
-        font-weight: bold;
-      }
-    </style>
   </head>
   <body>
     <h1>הדאטה של יואל</h1>
@@ -140,10 +73,8 @@
         <option value="תיתורה">תיתורה</option>
         <option value="תמוז">תמוז</option>
         <option value="תמיר">תמיר</option>
-
       </select>
       <br><br>
-
         <br>
         <input type="submit" value="Submit">
     </form>
@@ -169,11 +100,11 @@
       <td>{{ row[3] }}</td>
       <td>
       <span class="show-more">לפרטים</span>
-      <span class="hidden">{{ row[4][:] }}</span>
+      <span class="hidden">{{ row[4]}}</span>
       </td>
       <td>
       <span class="show-more">לפרטים</span>
-      <span class="hidden">{{ row[5][:] }}</span>
+      <span class="hidden">{{ row[5]}}</span>
       </td>
     </tr>
     {% endfor %}

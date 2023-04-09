@@ -5,7 +5,6 @@ import xlsxwriter
 import calendar
 from datetime import datetime
 import io, os, sys
-import mysql.connector
 
 if getattr(sys, 'frozen', False):
     template_folder = os.path.join(sys._MEIPASS, 'templates')
@@ -13,14 +12,6 @@ if getattr(sys, 'frozen', False):
 else:
     app = Flask(__name__)
 
-
-
-db = mysql.connector.connect(
-    host="sql12.freemysqlhosting.net",
-    user="sql12610795",
-    password="4MUnsXxUHz",
-    database="sql12610795"
-)
 
 
 
@@ -424,36 +415,28 @@ def result():
 @app.route('/query1', methods=['POST'])
 def query():
 
-    # Get the winery name from the form
+    # Get the winery name from the submitted form data
     winery_name = request.form['winery_name']
 
-    # Read the data from the excel file
+    # Read the data from an Excel file 'total_2015_to_2022.xlsx' into a pandas DataFrame
     data = pd.read_excel('total_2015_to_2022.xlsx')
 
     # Filter the data based on the specified winery name
     data = data[data['winery_name'] == winery_name]
 
+    # Select all columns from the filtered data
     data = data.loc[:, :]
 
-
-    # Get list of all wineries for the dropdown menu
+    # Get a list of all the unique winery names from the filtered data
     wineries = data['winery_name'].unique().tolist()
 
-    # Get the columns selected by the user
-    # cols = request.form.getlist('columns')
 
-    # Filter the data based on the selected columns
-    # data = data[cols]
-
-    # Convert the data to a list of lists for rendering in the template
+    # Convert the filtered data to a list of lists for rendering in the template
     data = data.values.tolist()
 
-    # Pass the data and winery list to the template and render it
+    # Pass the filtered data and winery list to the 'query.html' template and render it
     return render_template('query.html', data=data, wineries=wineries)
 
 
-
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000 ,debug=True)
