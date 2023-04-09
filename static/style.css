@@ -156,3 +156,20 @@ button:hover {
 body {
   text-align: center;
 }
+
+.wine-type {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-more {
+  color: blue;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}

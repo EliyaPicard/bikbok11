@@ -1,17 +1,25 @@
 <!doctype html>
 <html>
   <head>
-    <title>Winery Bottling Data</title>
+    <title>הדאטה של יואל</title>
+    <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='style.css')}}">
+    <img id="logo" src="{{ url_for('static', filename='logo.jpeg') }}">
+
+
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        line-height: 1.5;
+      .show-more {
+        color: blue;
+        cursor: pointer;
+        margin-left: 5px;
       }
 
-      h1 {
-        font-size: 24px;
-        margin-bottom: 20px;
+      .hidden {
+        display: none;
+      }
+      body {
+        font-family: David, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
       }
 
       form {
@@ -65,46 +73,113 @@
     </style>
   </head>
   <body>
-    <h1>Winery Bottling Data</h1>
+    <h1>הדאטה של יואל</h1>
+    <button class = 'special-button' onclick="window.location.href='/'">חזרה לתפריט הראשי</button>
     <form method="POST" action="/query1">
-        <label for="winery_name">Winery Name:</label>
-        <input type="text" name="winery_name" id="winery_name"><br>
-        <input type="checkbox" name="columns" value="winery_name">יקב<br>
-        <input type="checkbox" name="columns" value="year">תאריך<br>
-        <input type="checkbox" name="columns" value="price">מחיר<br>
-        <input type="checkbox" name="columns" value="total_bottles">מס' בקבוקים<br>
-        <input type="checkbox" name="columns" value="bottles">סוגי יין<br>
-        <input type="checkbox" name="columns" value="karton">אריזה<br>
+        <label for="winery_name">שם היקב:</label>
+      <select name="winery_name" id="winery">
+        <option value="אדיר">אדיר</option>
+        <option value="אגאדיס">אגאדיס</option>
+        <option value="אור-טל">אור-טל</option>
+        <option value="אלונה">אלונה</option>
+        <option value="אלפא">אלפא</option>
+        <option value="אמפורה">אמפורה</option>
+        <option value="ארזה">ארזה</option>
+        <option value="בארות">בארות</option>
+        <option value="בזלת הגולן">בזלת הגולן</option>
+        <option value="בועז מזרחי אדם">בועז מזרחי אדם</option>
+        <option value="בית אל">בית אל</option>
+        <option value="בת שלמה">בת שלמה</option>
+        <option value="בראשית">בראשית</option>
+        <option value="גבעות">גבעות</option>
+        <option value="דלתון">דלתון</option>
+        <option value="דרימיה">דרימיה</option>
+        <option value="היקב הדרומי">היקב הדרומי</option>
+        <option value="הנמן">הנמן</option>
+        <option value="הר ברכה">הר ברכה</option>
+        <option value="השדרה">השדרה</option>
+        <option value="ויתקין">ויתקין</option>
+        <option value="ונטורה">ונטורה</option>
+        <option value="וורטמן">וורטמן</option>
+        <option value="טריו">טריו</option>
+        <option value="טעמי הגליל">טעמי הגליל</option>
+        <option value="עגור">עגור</option>
+        <option value="כישור">כישור</option>
+        <option value="כרמל">כרמל</option>
+        <option value="לוטם">לוטם</option>
+        <option value="ליבנה">ליבנה</option>
+        <option value="מגוסה">מגוסה</option>
+        <option value="מדבר">מדבר</option>
+        <option value="מצליח">מצליח</option>
+        <option value="מולי משקאות משכרים">מולי משקאות משכרים</option>
+        <option value="מוניץ">מוניץ</option>
+        <option value="נעמה סורקין">נעמה סורקין</option>
+        <option value="ססלוב">ססלוב</option>
+        <option value="ספרה">ספרה</option>
+        <option value="עמותת בנימין">עמותת בנימין</option>
+        <option value="עמק יזרעאל">עמק יזרעאל</option>
+        <option value="פאר">פאר</option>
+        <option value="פלדשטיין">פלדשטיין</option>
+        <option value="פלטר">פלטר</option>
+        <option value="פסגות">פסגות</option>
+        <option value="קובננט">קובננט</option>
+        <option value="קנטיר">קנטיר</option>
+        <option value="קיטרון">קיטרון</option>
+        <option value="קפסוטו">קפסוטו</option>
+        <option value="רמות נפתלי">רמות נפתלי</option>
+        <option value="רקנאטי">רקנאטי</option>
+        <option value="שדות">שדות</option>
+        <option value="שורק">שורק</option>
+        <option value="שטרן">שטרן</option>
+        <option value="שילה">שילה</option>
+        <option value="שיקמה">שיקמה</option>
+        <option value="שאטו רמו">שאטו רמו</option>
+        <option value="שאטו גולן">שאטו גולן</option>
+        <option value="שדה משה">שדה משה</option>
+        <option value="שדות">שדות</option>
+        <option value="תיתורה">תיתורה</option>
+        <option value="תמוז">תמוז</option>
+        <option value="תמיר">תמיר</option>
+
+      </select>
+      <br><br>
 
         <br>
-        <input type="submit" value="Query">
+        <input type="submit" value="Submit">
     </form>
 
-    {% if data %}
-    <table>
-      <thead>
-        <tr>
-          <th>יקב</th>
-          <th>תאריך</th>
-          <th>מחיר</th>
-          <th>מס' בקבוקים</th>
-          <th>סוגי יין</th>
-          <th>אריזה</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in data %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-          <td>{{ row[4] }}</td>
-          <td>{{ row[5] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+{% if data %}
+<table>
+  <thead>
+    <tr>
+      <th>יקב</th>
+      <th>תאריך</th>
+      <th>מחיר</th>
+      <th>מס' בקבוקים</th>
+      <th>סוגי יין</th>
+      <th>אריזה</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>
+      <span class="show-more">לפרטים</span>
+      <span class="hidden">{{ row[4][:] }}</span>
+      </td>
+      <td>
+      <span class="show-more">לפרטים</span>
+      <span class="hidden">{{ row[5][:] }}</span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+  <script src="{{ url_for('static', filename='my_script.js') }}"></script>
   </body>
 </html>

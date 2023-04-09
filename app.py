@@ -428,19 +428,22 @@ def query():
     winery_name = request.form['winery_name']
 
     # Read the data from the excel file
-    data = pd.read_excel('2019.xlsx')
+    data = pd.read_excel('total_2015_to_2022.xlsx')
 
     # Filter the data based on the specified winery name
     data = data[data['winery_name'] == winery_name]
+
+    data = data.loc[:, :]
+
 
     # Get list of all wineries for the dropdown menu
     wineries = data['winery_name'].unique().tolist()
 
     # Get the columns selected by the user
-    cols = request.form.getlist('columns')
+    # cols = request.form.getlist('columns')
 
     # Filter the data based on the selected columns
-    data = data[cols]
+    # data = data[cols]
 
     # Convert the data to a list of lists for rendering in the template
     data = data.values.tolist()
