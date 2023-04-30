@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, url_for, jsonify
+from flask import Flask, request, render_template, send_file, url_for, jsonify,flash
 import pandas as pd
 import numpy as np
 import xlsxwriter
@@ -243,13 +243,43 @@ def calc():
 @app.route('/result', methods=['POST'])
 def result():
     filename = request.files['file']
-    price = float(request.form['price'])
-    magnom = float(request.form['magnum_price'])
-    mishtachim = float(request.form['mishtachim_price'])
-    karton = float(request.form['karton_price'])
-    maarach = float(request.form['maarach_price'])
+    price = request.form.get('price')
+    if price:
+        price = float(price)
+    else:
+        price = 0.0
+
+    magnom = request.form['magnum_price']
+    if magnom:
+        magnom = float(magnom)
+    else:
+        magnom = 0.0
+
+    mishtachim = request.form['mishtachim_price']
+    if mishtachim:
+        mishtachim = float(mishtachim)
+    else:
+        mishtachim = 0.0
+
+    karton = request.form['karton_price']
+    if karton:
+        karton = float(karton)
+    else:
+        karton = 0.0
+
+    maarach = request.form['maarach_price']
+    if maarach:
+        maarach = float(maarach)
+    else:
+        maarach = price
+
     Yekev_name = request.form['winery']
+    if not Yekev_name:
+        Yekev_name = '0'
+
     month = request.form['month']
+    if not month:
+        month = '0'
 
     def recipt(filename, price, magnom, mishtachim, Yekev_name, karton, maarach, month):
         xlsx = pd.ExcelFile(filename)
@@ -262,6 +292,15 @@ def result():
                 df1 = df1.dropna(axis=0, how='all')
                 df1 = df1.dropna(axis=1, how='all')
                 df1 = df1.iloc[:29]
+
+                df1['מילוי\nאו\nמערך חוזר'] = df1['מילוי\nאו\nמערך חוזר'].str.strip()
+                df1['סוג יין'] = df1['סוג יין'].str.strip()
+
+                df1['סוג\nקפסולות'] = df1['סוג\nקפסולות'].fillna('ללא')
+                df1['סוג\nתויות'] = df1['סוג\nתויות'].fillna('ללא')
+                df1['קרטון'] = df1['קרטון'].fillna('ללא')
+                df1['בקבוק'] = df1['בקבוק'].fillna('ללא')
+                df1['מילוי\nאו\nמערך חוזר'] = df1['מילוי\nאו\nמערך חוזר'].fillna('מילוי')
 
                 pivot_plats = df1.pivot_table(
                     index=['סוג יין', 'סוג\nקפסולות', 'סוג\nתויות', 'קרטון', 'בקבוק', 'מדבקת\nקרטון', "סטרץ'\nמכונה",
@@ -282,8 +321,11 @@ def result():
                 cols = cols[-1:] + cols[:-1]
                 df = df[cols]
                 df_dict[i] = df
+
             except Exception:
-                pass
+                error_message = f"Failed to process sheet '{i}'"
+                continue
+
         df = pd.concat(df_dict.values(), ignore_index=True)
 
         df.insert(1, "יקב", Yekev_name)
@@ -382,6 +424,7 @@ def result():
         cell_format2 = workbook.add_format({'num_format': '#,##0'})
         cell_format3 = workbook.add_format({'bold': True, 'font_color': 'red', 'num_format': '₪ #.##0'})
         cell_format4 = workbook.add_format({'bold': True})
+        cell_format5 = workbook.add_format({'bold': True, 'font_color': 'red', 'num_format': '₪ 0.###'})
 
         # Set the columns width and format
         worksheet.set_column('K:K', None, cell_format1)
@@ -403,6 +446,8 @@ def result():
         worksheet.write('D4', 'דוא"ל:', cell_format4)
         worksheet.write('D3', 'ח.פ', cell_format4)
         worksheet.write('D2', 'שם העסק:', cell_format4)
+        worksheet.write('L5', karton, cell_format5)
+        worksheet.write('M5', mishtachim, cell_format3)
 
         worksheet.autofit()
 
@@ -452,7 +497,7 @@ def process_files():
         df = pd.read_excel(os.path.join(dir_path, filename))
 
         # extract relevant information from dataframe
-        winery_name = [df.iloc[5, 1]]
+        winery_name = [df.iloc[5, 1].strip()]
         total_bootls = [df.iloc[df.iloc[:, 3].last_valid_index(), 3]]
         price = [df.iloc[3, 4]]
         year = [str(df.iloc[0, 7]) + ' ' + str(df.iloc[0, 6])]
