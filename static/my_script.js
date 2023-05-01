@@ -25,3 +25,5 @@ showLessButtons.forEach((button) => {
     button.parentElement.querySelector(".show-more").style.display = "inline";
   });
 });
+
+

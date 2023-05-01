@@ -11,6 +11,8 @@
     <form method="POST" action="/query1">
         <label for="winery_name">שם היקב:</label>
       <select name="winery_name" id="winery">
+        <option value="">בחר יקב</option>
+
         <option value="אדיר">אדיר</option>
         <option value="אגאדיס">אגאדיס</option>
         <option value="אור-טל">אור-טל</option>
@@ -75,8 +77,10 @@
         <option value="תמוז">תמוז</option>
         <option value="תמיר">תמיר</option>
       </select>
-      <br><br>
         <br>
+    <label for="other-winery">אפשרות לבדיקה ידנית:</label>
+    <input type="text" name="other_winery" placeholder="כתוב את שם היקב">
+      <br><br>
         <input type="submit" value="Submit">
     </form>
 

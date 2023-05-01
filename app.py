@@ -467,6 +467,11 @@ def query():
     # Get the winery name from the submitted form data
     winery_name = request.form['winery_name']
 
+    # Check if an "Other Winery" value was provided and use that as the winery name instead
+    other_winery_name = request.form.get('other_winery')
+    if other_winery_name:
+        winery_name = other_winery_name
+
     # Read the data from an Excel file 'total_2015_to_2022.xlsx' into a pandas DataFrame
     data = pd.read_excel('total_2015_to_2022.xlsx')
 
