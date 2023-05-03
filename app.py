@@ -291,7 +291,9 @@ def result():
                 df1 = pd.read_excel(filename, sheet_name=i, header=6)
                 df1 = df1.dropna(axis=0, how='all')
                 df1 = df1.dropna(axis=1, how='all')
-                df1 = df1.iloc[:29]
+                first_nan_index = df1['מספר\nמשטח'].isna().idxmax()
+
+                df1 = df1.iloc[:first_nan_index]
 
                 df1['מילוי\nאו\nמערך חוזר'] = df1['מילוי\nאו\nמערך חוזר'].str.strip()
                 df1['סוג יין'] = df1['סוג יין'].str.strip()
