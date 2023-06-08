@@ -47,6 +47,7 @@ def calc():
 
 @app.route('/result', methods=['POST'])
 def result():
+    """Generate invoice based on input data."""
     filename = request.files['file']
     price = request.form.get('price')
     if price:
@@ -92,7 +93,7 @@ def result():
 
 @app.route('/query1', methods=['POST'])
 def query():
-
+    """Perform query based on winery name."""
     # Get the winery name from the submitted form data
     winery_name = request.form['winery_name']
 
@@ -123,9 +124,10 @@ def query():
 
 @app.route('/process_files', methods=['POST'])
 def process_files():
-    # get directory path from request data
+    """Process files for updating data."""
     dir_path = '2023 update/'
     list1 = []
+
     for filename in os.listdir(dir_path):
         # read excel file
         df = pd.read_excel(os.path.join(dir_path, filename))
