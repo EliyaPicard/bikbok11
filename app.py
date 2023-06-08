@@ -41,7 +41,7 @@ def calc():
     filename = request.files['file']
     price_per_mile = float(request.form['price'])
     month = request.form['month']
-    output = hours(filename, price_per_mile, month)  # modify this line
+    output = hours(filename, price_per_mile, month)
     return send_file(output)
 
 
