@@ -2,6 +2,7 @@ import pandas as pd
 import calendar
 from datetime import datetime
 
+# filename = 'QuestionsReport-QVYPz.xlsx'
 
 def hours(filename, price_per_mile, month):
     def year():
@@ -27,13 +28,17 @@ def hours(filename, price_per_mile, month):
             start_row = i + 3
     df = pd.merge(tables[0], tables[1], how='left',
                   left_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
-                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'])
+                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
+                  suffixes=('_left_1', '_right_1'))
     df = pd.merge(df, tables[2], how='left',
                   left_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
-                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'])
+                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
+                  suffixes=('_left_2', '_right_2'))
     df = pd.merge(df, tables[3], how='left',
                   left_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
-                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'])
+                  right_on=['מחלקה', 'מיקום', 'התחלה', 'סיום', 'סך שעות', 'תאריך', 'שם עובד'],
+                  suffixes=('_left_3', '_right_3'))
+    print(df)
     df['ש"ע 100%'] = df['סך שעות'].apply(lambda x: x if x <= 9 else 9)
     df['ש"ע 125%'] = df['סך שעות'].apply(lambda x: 0 if x <= 9 else x - 9 if x <= 11 and x > 9 else 2)
     df['ש"ע 150%'] = df['סך שעות'].apply(lambda x: x - 11 if x >= 11 else 0)
@@ -59,8 +64,12 @@ def hours(filename, price_per_mile, month):
         all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
         new_df = pd.DataFrame({'תאריך': all_dates})
 
-        # merge the new DataFrame with the original DataFrame
+        df1['תאריך'] = pd.to_datetime(df1['תאריך'], format='%d/%m/%Y')
+        new_df['תאריך'] = pd.to_datetime(new_df['תאריך'], format='%d/%m/%Y')
         merged_df = pd.merge(df1, new_df, on='תאריך', how='outer')
+
+        # merge the new DataFrame with the original DataFrame
+        # merged_df = pd.merge(df1, new_df, on='תאריך', how='outer')
         merged_df = merged_df.sort_values('תאריך')
 
         merged_df['יום'] = merged_df['תאריך'].apply(lambda x: str(x).split(' ')[0]).apply(
@@ -84,8 +93,11 @@ def hours(filename, price_per_mile, month):
         merged_df.columns = col_names
 
         merged_df['ארוחות'] = merged_df['ארוחות'].apply(lambda x: 10 if x == "כן" else 0)
-        merged_df['גילום ארוחות'] = merged_df['שינה בבית'].apply(
-            lambda x: 100 if x == "לא" else 40 if x == "כן" else 0)
+        merged_df['גילום ארוחות'] = merged_df.apply(
+            lambda row: 0 if row['ארוחות'] == 0 else (
+                100 if row['שינה בבית'] == "לא" else 40 if row['שינה בבית'] == "כן" else 0),
+            axis=1
+        )
 
         cols = ['ש"ע 100%', 'ש"ע 125%', 'ש"ע 150%', 'סך שעות', 'החזר נסיעות', 'ארוחות']
 
@@ -197,5 +209,8 @@ def hours(filename, price_per_mile, month):
         worksheet.autofit()
 
     # Close the Excel writer object
-    writer.save()
+    writer.close()
     return writer
+
+
+# hours(filename,1,'Februray')

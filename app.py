@@ -22,7 +22,7 @@ def home():
 
 
 @app.route('/hours')
-def hours():
+def hours1():
     return render_template('hours.html')
 
 
